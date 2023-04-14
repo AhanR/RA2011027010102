@@ -14,8 +14,8 @@ export default async function apiGet(route="/trains") {
     // if not valid, request new auth
     // else make the request
 
-    console.log(authentication);
-    console.log(new Date(authentication.expires_in*1000), new Date())
+    // console.log(authentication);
+    // console.log(new Date(authentication.expires_in*1000), new Date())
     if(new Date(authentication.expires_in*1000) < new Date()) {
         // the date is older than current date
         // we need new token
@@ -26,8 +26,7 @@ export default async function apiGet(route="/trains") {
     const rep = await axios.get("http://localhost:3000"+route, {
         headers : {
             "Authorization" : authentication.token_type + " " + authentication.access_token
-        },
-        transformRequest : [(data, head) => console.log(head)]
+        }
     });
     setUpdateDate(new Date());
     return await rep.data;
@@ -35,9 +34,7 @@ export default async function apiGet(route="/trains") {
 
 export async function doAuth() {
     // if the company has not been registerd, we cannot authorize them
-    if(registration == null) {
-        return null;
-    }
+    if(registration == null) return null;
     // fetch and store auth details
     const rep = await axios.post("http://localhost:3000/auth", registration);
     authentication = await rep.data;
