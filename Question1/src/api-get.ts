@@ -1,4 +1,5 @@
 import { registration, setUpdateDate } from "../main";
+import axios from 'axios'
 
 export let authentication = {
     "token_type" : "",
@@ -17,14 +18,13 @@ export default async function apiGet(route="/trains") {
         doAuth();
     }
     // get the required data from the server
-    const rep = await fetch("localhost:3000"+route, {
-        method: "get",
+    const rep = await axios.get("localhost:3000"+route, {
         headers : {
             "authorization" : authentication["token_type"] + " " + authentication["access_token"]
         }
     });
     setUpdateDate(new Date());
-    return await rep.json();
+    return await rep.data;
 }
 
 export async function doAuth() {
@@ -33,9 +33,7 @@ export async function doAuth() {
         return null;
     }
     // fetch and store auth details
-    const rep = await fetch("http://localhost:3000/auth", {
-        method : "post",
-        body : JSON.stringify(registration)
-    })
-    authentication = await rep.json();
+    const rep = await axios.post("http://localhost:3000/auth", registration);
+    const authentication = await rep.data;
+    console.log(authentication);
 }
