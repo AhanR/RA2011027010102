@@ -1,5 +1,4 @@
-import { json } from "express";
-import { registration } from "../main";
+import { registration, setUpdateDate } from "../main";
 
 export let authentication = {
     "token_type" : "",
@@ -24,6 +23,7 @@ export default async function apiGet(route="/trains") {
             "authorization" : authentication["token_type"] + " " + authentication["access_token"]
         }
     });
+    setUpdateDate(new Date());
     return await rep.json();
 }
 

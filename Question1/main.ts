@@ -1,5 +1,6 @@
 import express, { NextFunction, Router } from 'express';
 import http from 'http';
+import apiGet from './src/api-get';
 
 const app = express();
 const PORT = 8080
@@ -10,9 +11,21 @@ export let registration = null;
 // before any request to localhost:300 check validity of key
 // create subroutine for the function call
 
-app.get("/", (req, res, next) => {
-    
+let trainDetails = [];
+let last_updated = new Date();
+
+app.get("/", async (req, res, next) => {
+    trainDetails = await apiGet();
+    if(trainDetails == null) {
+        res.send("Error");
+    } else {
+        res.send(trainDetails);
+    }
 })
+
+export function setUpdateDate(date) {
+    last_updated = date;
+}
 
 http.createServer(app).listen(PORT, async () => {
     console.log("Server starting...");
