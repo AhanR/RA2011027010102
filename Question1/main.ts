@@ -1,6 +1,6 @@
 import express, { NextFunction, Router } from 'express';
 import http from 'http';
-import apiGet from './src/api-get';
+import apiGet, { doAuth } from './src/api-get';
 import axios from 'axios';
 
 interface Registration {
@@ -10,13 +10,8 @@ interface Registration {
 }
 
 const app = express();
-const PORT = 8080
+const PORT = 8080;
 export let registration : Registration | unknown;
-// export let registration = {
-//     "companyName": "",
-//     "clientID": "",
-//     "clientSecret": ""
-// };
 
 // on app startup fetch token through /register
 // get token that can expire
@@ -33,6 +28,7 @@ app.get("/", async (req, res, next) => {
     // if(last_updated.setMinutes(last_updated.getMinutes() + 1) < new Date()) {
     //      return trainDetails;
     // }
+    console.log(trainDetails);
     if(trainDetails == null) {
         res.send("Error");
     } else {
@@ -51,5 +47,6 @@ http.createServer(app).listen(PORT, async () => {
         "companyName" : "Ahan test"
     })
     registration = await rep.data;
-    
+    doAuth();
+    console.log(registration)
 })
